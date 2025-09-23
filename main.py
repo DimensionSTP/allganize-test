@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 import hydra
 from omegaconf import DictConfig
 
-from src.pipelines import cli_pipeline
+from src.pipelines import pipeline
 
 
 @hydra.main(
@@ -23,7 +23,7 @@ from src.pipelines import cli_pipeline
 def main(
     config: DictConfig,
 ) -> None:
-    return cli_pipeline(config)
+    return pipeline(config)
 
 
 if __name__ == "__main__":
