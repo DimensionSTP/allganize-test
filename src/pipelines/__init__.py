@@ -1,7 +1,5 @@
-from .cli_pipeline import pipeline as cli_pipeline
-from .app_pipeline import pipeline as app_pipeline
+from .pipeline import pipeline
 
 __all__ = [
-    "cli_pipeline",
-    "app_pipeline",
+    "pipeline",
 ]
