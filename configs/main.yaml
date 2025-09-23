@@ -6,22 +6,19 @@ defaults:
   - manager: manager
   - hydra: hydra
 
-package_name: recipe-ai-test
+package_name: allganize-test
 project_dir: ${oc.env:PROJECT_DIR}/${package_name}
 connected_dir: ${oc.env:CONNECTED_DIR}/${package_name}
-usage: RecipeAI
+usage: RAG
 
 seed: 2025
 
 data_path: ${connected_dir}/data
-indices_name: recipe_db.faiss
-items_name: recipe_db.csv
-
-lab_id_column_name: lab_no
-category_column_name: category
-category_name_column_name: category_name
-target_column_name: ingredient_en
-amount_column_name: amount
+documents_name: documents.csv
+items_name: documents_with_chunks.csv
+indices_name: rag_db.faiss
+eval_file_name: rag_evaluation_result.csv
+result_file_name: rag_results.csv
 
 distance_column_name: distance
 score_column_name: score
@@ -31,20 +28,20 @@ content_column_name: content
 
 model_family: Qwen/Qwen3
 model_id:
-  embedding: ${model_family}-Embedding-4B
-  reranker: ${model_family}-Reranker-4B
-  generator: ${model_family}-4B-Instruct-2507
+  embedding: ${model_family}-Embedding-0.6B
+  reranker: ${model_family}-Reranker-0.6B
+  generator: ${model_family}-0.6B
 
-dim: 2560
+dim: 1024
 num_gpus: ${oc.decode:${oc.env:DEVICES}}
 
 gpu_memory_utilization:
-  embedding: 0.45
-  reranker: 0.45
-  generator: 0.9
+  embedding: 0.25
+  reranker: 0.25
+  generator: 0.45
 
 max_length: 4096
-generator_max_length: 65536
+generator_max_length: 8192
 max_new_tokens: 2048
 do_sample: true
 generation_config:
@@ -53,13 +50,13 @@ generation_config:
   top_k: 20
 
 top_k:
-  retrieval: 50
-  rerank: 5
+  retrieval: 20
+  rerank: 3
 
 device_id:
   embedding: 0
   reranker: 0
-  generator: 1
+  generator: 0
 master_addr: 127.0.0.1
 master_port:
   embedding: 29501
@@ -67,22 +64,6 @@ master_port:
   generator: 29521
 nccl_socket_ifname: lo
 nccl_ib_disable: 1
-
-input_mode:
-  lab_id: 1
-  ingredients: 2
-
-is_table: true
-
-remote_mode: true
-api_key: ${oc.env:API_KEY}
-remote_api_base_recommend: ${oc.env:REMOTE_API_BASE_RECOMMEND}
-remote_api_base_report: ${oc.env:REMOTE_API_BASE_REPORT}
-
-server:
-  host: ${oc.env:SERVER_HOST}
-  recommend_port: ${oc.env:RECOMMEND_SERVER_PORT}
-  report_port: ${oc.env:REPORT_SERVER_PORT}
 
 project_name: ${package_name}-${usage}
 
