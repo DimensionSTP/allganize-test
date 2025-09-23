@@ -1,0 +1,47 @@
+embedding:
+  _target_: src.models.VllmEmbedding
+  model_id: ${model_id.embedding}
+  num_gpus: ${num_gpus}
+  seed: ${seed}
+  max_length: ${max_length}
+  gpu_memory_utilization: ${gpu_memory_utilization.embedding}
+  instruction: ${instruction.embedding}
+  device_id: ${device_id.embedding}
+  master_addr: ${master_addr}
+  master_port: ${master_port.embedding}
+  nccl_socket_ifname: ${nccl_socket_ifname}
+  nccl_ib_disable: ${nccl_ib_disable}
+
+reranker:
+  _target_: src.models.VllmReranker
+  model_id: ${model_id.reranker}
+  num_gpus: ${num_gpus}
+  seed: ${seed}
+  max_length: ${max_length}
+  gpu_memory_utilization: ${gpu_memory_utilization.reranker}
+  instruction: ${instruction.reranker}
+  device_id: ${device_id.reranker}
+  master_addr: ${master_addr}
+  master_port: ${master_port.reranker}
+  nccl_socket_ifname: ${nccl_socket_ifname}
+  nccl_ib_disable: ${nccl_ib_disable}
+
+generator:
+  _target_: src.models.VllmGenerator
+  model_id: ${model_id.generator}
+  num_gpus: ${num_gpus}
+  seed: ${seed}
+  max_length: ${generator_max_length}
+  gpu_memory_utilization: ${gpu_memory_utilization.generator}
+  is_table: ${is_table}
+  instruction: ${instruction.generator}
+  role_column_name: ${role_column_name}
+  content_column_name: ${content_column_name}
+  max_new_tokens: ${max_new_tokens}
+  do_sample: ${do_sample}
+  generation_config: ${generation_config}
+  device_id: ${device_id.generator}
+  master_addr: ${master_addr}
+  master_port: ${master_port.generator}
+  nccl_socket_ifname: ${nccl_socket_ifname}
+  nccl_ib_disable: ${nccl_ib_disable}

@@ -1,0 +1,7 @@
+_target_: src.databases.FaissIndex
+data_path: ${data_path}
+indices_name: ${indices_name}
+items_name: ${items_name}
+dim: ${dim}
+retrieval_top_k: ${top_k.retrieval}
+distance_column_name: ${distance_column_name}

@@ -1,0 +1,90 @@
+# @package _global_
+defaults:
+  - database: vector_store
+  - model: model
+  - instruction: instruction
+  - manager: manager
+  - hydra: hydra
+
+package_name: recipe-ai-test
+project_dir: ${oc.env:PROJECT_DIR}/${package_name}
+connected_dir: ${oc.env:CONNECTED_DIR}/${package_name}
+usage: RecipeAI
+
+seed: 2025
+
+data_path: ${connected_dir}/data
+indices_name: recipe_db.faiss
+items_name: recipe_db.csv
+
+lab_id_column_name: lab_no
+category_column_name: category
+category_name_column_name: category_name
+target_column_name: ingredient_en
+amount_column_name: amount
+
+distance_column_name: distance
+score_column_name: score
+
+role_column_name: role
+content_column_name: content
+
+model_family: Qwen/Qwen3
+model_id:
+  embedding: ${model_family}-Embedding-4B
+  reranker: ${model_family}-Reranker-4B
+  generator: ${model_family}-4B-Instruct-2507
+
+dim: 2560
+num_gpus: ${oc.decode:${oc.env:DEVICES}}
+
+gpu_memory_utilization:
+  embedding: 0.45
+  reranker: 0.45
+  generator: 0.9
+
+max_length: 4096
+generator_max_length: 65536
+max_new_tokens: 2048
+do_sample: true
+generation_config:
+  temperature: 0.6
+  top_p: 0.95
+  top_k: 20
+
+top_k:
+  retrieval: 50
+  rerank: 5
+
+device_id:
+  embedding: 0
+  reranker: 0
+  generator: 1
+master_addr: 127.0.0.1
+master_port:
+  embedding: 29501
+  reranker: 29511
+  generator: 29521
+nccl_socket_ifname: lo
+nccl_ib_disable: 1
+
+input_mode:
+  lab_id: 1
+  ingredients: 2
+
+is_table: true
+
+remote_mode: true
+api_key: ${oc.env:API_KEY}
+remote_api_base_recommend: ${oc.env:REMOTE_API_BASE_RECOMMEND}
+remote_api_base_report: ${oc.env:REMOTE_API_BASE_REPORT}
+
+server:
+  host: ${oc.env:SERVER_HOST}
+  recommend_port: ${oc.env:RECOMMEND_SERVER_PORT}
+  report_port: ${oc.env:REPORT_SERVER_PORT}
+
+project_name: ${package_name}-${usage}
+
+run_name: ${project_name}
+work_dir: ${hydra:runtime.cwd}
