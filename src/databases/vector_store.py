@@ -31,7 +31,11 @@ class FaissIndex:
 
         self.dim = dim
         self.index = faiss.IndexFlatIP(dim)
-        self.df = pd.read_csv(self.items_path)
+
+        if os.path.exists(self.items_path):
+            self.df = pd.read_csv(self.items_path)
+        else:
+            self.df = pd.DataFrame()
 
         self.retrieval_top_k = retrieval_top_k
         self.distance_column_name = distance_column_name
@@ -74,6 +78,10 @@ class FaissIndex:
         faiss.write_index(
             self.index,
             self.indices_path,
+        )
+        self.df.to_csv(
+            self.items_path,
+            index=False,
         )
 
     def load(self) -> None:
