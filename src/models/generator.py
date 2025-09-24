@@ -14,7 +14,6 @@ class VllmGenerator:
         seed: int,
         max_length: int,
         gpu_memory_utilization: float,
-        is_table: bool,
         instruction: Dict[str, str],
         role_column_name: str,
         content_column_name: str,
@@ -64,7 +63,6 @@ class VllmGenerator:
         if self.tokenizer.pad_token_id is None:
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
-        self.is_table = is_table
         self.instruction = instruction
         self.role_column_name = role_column_name
         self.content_column_name = content_column_name
@@ -88,44 +86,16 @@ class VllmGenerator:
         self,
         recommendations: str,
     ) -> str:
-        prompt = self.get_prompt(recommendations=recommendations)
-        generation = self.generate(prompt=prompt)
+        generation = self.generate(query=recommendations)
         return generation
 
     def generate(
         self,
-        prompt: str,
+        query: str,
     ) -> str:
         output = self.llm.generate(
-            prompts=[prompt],
+            prompts=[query],
             sampling_params=self.sampling_params,
         )
         generation = output[0].outputs[0].text.strip()
         return generation
-
-    def get_prompt(
-        self,
-        recommendations: str,
-    ) -> str:
-        if self.is_table:
-            instruction = self.instruction["with_tables"]
-        else:
-            instruction = self.instruction["base"]
-
-        conversation = [
-            {
-                self.role_column_name: "system",
-                self.content_column_name: instruction,
-            },
-            {
-                self.role_column_name: "user",
-                self.content_column_name: recommendations,
-            },
-        ]
-
-        prompt = self.tokenizer.apply_chat_template(
-            conversation,
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-        return prompt
